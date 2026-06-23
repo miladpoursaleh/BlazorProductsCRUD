@@ -7,17 +7,17 @@
 @inject ProductService ProductService
 @inject IJSRuntime JS
 
-<h3>Products</h3>
+<h3>محصولات</h3>
 
 <a href="/products/create">
-    Create Product
+    افزودن محصول
 </a>
 
 <hr />
 
 @if (products == null)
 {
-    <p>Loading...</p>
+    <p>در حال دریافت اطلاعات...</p>
 }
 else
 {
@@ -25,10 +25,10 @@ else
         <thead>
             <tr>
                 <th>#</th>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
+                <th>شناسه</th>
+                <th>نام</th>
+                <th>توضیحات</th>
+                <th>قیمت</th>
                 <th></th>
             </tr>
         </thead>
@@ -43,16 +43,16 @@ else
                         <td>@product.Id</td>
                         <td>@product.Name</td>
                         <td>@product.Description</td>
-                        <td>@product.Price</td>
+                        <td>@string.Format("{0:N0}", product.Price)</td>
                         <td>
                             <a class="btn btn-warning btn-sm"
                                href="/products/edit/@product.Id">
-                                Edit
+                                ویرایش
                             </a>
 
                             <button class="btn btn-danger btn-sm ms-2"
                                     @onclick="() => Delete(product.Id)">
-                                Delete
+                                حذف
                             </button>
                         </td>
                     </tr>
@@ -75,7 +75,7 @@ else
 
     private async Task Delete(int id)
     {
-        if (!await JS.InvokeAsync<bool>("confirm", $"Delete product {id}?"))
+        if (!await JS.InvokeAsync<bool>("حذف محصول", $"آیا از حذف محصول {id} اطمینان دارید?"))
             return;
 
         await ProductService.DeleteAsync(id);

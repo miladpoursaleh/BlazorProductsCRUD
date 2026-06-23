@@ -8,7 +8,7 @@
 
 @if (product == null)
 {
-    <p>Loading...</p>
+    <p>در حال دریافت اطلاعات...</p>
 }
 else
 {
@@ -19,30 +19,30 @@ else
         <ValidationSummary />
 
         <div class="mb-3">
-            <label>Name</label>
+            <label>نام</label>
             <InputText class="form-control"
                        @bind-Value="product.Name" />
         </div>
 
         <div class="mb-3">
-            <label>Description</label>
+            <label>توضیحات</label>
             <InputTextArea class="form-control"
                            @bind-Value="product.Description" />
         </div>
 
         <div class="mb-3">
-            <label>Price</label>
+            <label>قیمت</label>
             <InputNumber class="form-control"
                          @bind-Value="product.Price" />
         </div>
 
         <button type="submit" class="btn btn-primary">
-            Update
+            ویرایش
         </button>
 
         <a href="/products"
            class="btn btn-secondary ms-2">
-            Cancel
+            انصراف
         </a>
 
     </EditForm>
