@@ -1,0 +1,51 @@
+﻿@page "/products"
+@using BlazorProductsCRUD.Models
+@using BlazorProductsCRUD.Services
+
+@inject ProductService ProductService
+
+<h3>Products</h3>
+
+<a href="/products/create">
+    Create Product
+</a>
+
+<hr />
+
+@if (products == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var product in products)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Description</td>
+                    <td>@product.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private List<Product>? products;
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await ProductService.GetAllAsync();
+    }
+}
