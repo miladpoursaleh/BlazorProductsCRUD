@@ -1,8 +1,11 @@
-﻿@page "/products"
+﻿@page "/"
+@page "/products"
+@rendermode InteractiveServer
 @using BlazorProductsCRUD.Models
 @using BlazorProductsCRUD.Services
 
 @inject ProductService ProductService
+@inject IJSRuntime JS
 
 <h3>Products</h3>
 
@@ -21,20 +24,41 @@ else
     <table class="table">
         <thead>
             <tr>
+                <th>#</th>
+                <th>Id</th>
                 <th>Name</th>
                 <th>Description</th>
                 <th>Price</th>
+                <th></th>
             </tr>
         </thead>
 
         <tbody>
-            @foreach (var product in products)
-            {
-                <tr>
-                    <td>@product.Name</td>
-                    <td>@product.Description</td>
-                    <td>@product.Price</td>
-                </tr>
+            @{
+                int row = 1;
+                foreach (var product in products)
+                {
+                    <tr>
+                        <td>@row</td>
+                        <td>@product.Id</td>
+                        <td>@product.Name</td>
+                        <td>@product.Description</td>
+                        <td>@product.Price</td>
+                        <td>
+                            <a class="btn btn-warning btn-sm"
+                               href="/products/edit/@product.Id">
+                                Edit
+                            </a>
+
+                            <button class="btn btn-danger btn-sm ms-2"
+                                    @onclick="() => Delete(product.Id)">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+
+                    row++;
+                }
             }
         </tbody>
     </table>
@@ -47,5 +71,15 @@ else
     protected override async Task OnInitializedAsync()
     {
         products = await ProductService.GetAllAsync();
+    }
+
+    private async Task Delete(int id)
+    {
+        if (!await JS.InvokeAsync<bool>("confirm", $"Delete product {id}?"))
+            return;
+
+        await ProductService.DeleteAsync(id);
+        products = await ProductService.GetAllAsync();
+        StateHasChanged();
     }
 }

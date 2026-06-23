@@ -1,0 +1,70 @@
+﻿@page "/products/edit/{Id:int}"
+@rendermode InteractiveServer
+@using BlazorProductsCRUD.Models
+@using BlazorProductsCRUD.Services
+
+@inject ProductService ProductService
+@inject NavigationManager Navigation
+
+@if (product == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <h3>Edit Product '@product.Id'</h3>
+
+    <EditForm Model="product" OnValidSubmit="Save" FormName="EditProduct">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label>Name</label>
+            <InputText class="form-control"
+                       @bind-Value="product.Name" />
+        </div>
+
+        <div class="mb-3">
+            <label>Description</label>
+            <InputTextArea class="form-control"
+                           @bind-Value="product.Description" />
+        </div>
+
+        <div class="mb-3">
+            <label>Price</label>
+            <InputNumber class="form-control"
+                         @bind-Value="product.Price" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Update
+        </button>
+
+        <a href="/products"
+           class="btn btn-secondary ms-2">
+            Cancel
+        </a>
+
+    </EditForm>
+}
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private Product? product;
+
+    protected override async Task OnInitializedAsync()
+    {
+        product = await ProductService.GetAsync(Id);
+    }
+
+    private async Task Save()
+    {
+        await ProductService.UpdateAsync(product);
+
+        Navigation.NavigateTo("/products");
+    }
+
+}
